@@ -4,7 +4,9 @@
   "description": "A Firebase + GCP Cloud Functions backend implementation for RealWorld",
   "main": "index.js",
   "scripts": {
-    "test": "echo todo"
+    "test": "echo todo",
+    "deploy:local": "functions deploy api --trigger-http",
+    "deploy:cloud": "gcloud beta functions deploy api --trigger-http --stage-bucket=gs://realworld-be"
   },
   "repository": {
     "type": "git",

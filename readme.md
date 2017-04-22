@@ -21,7 +21,26 @@ Authentication and Database are handled by [Firebase](https://firebase.google.co
 
 # Getting started
 
-1. Setup a new Firebase project
-2. Setup a new GCP Project, and enable Cloud Functions
-3. ...TODO...
+## Setup Firebase
 
+* Setup a new Firebase project, [here](http://firebase.google.com)
+* Store Firebase admin keys as `./.secret/firebase-admin-keys.json`  ([help](https://firebase.google.com/docs/admin/setup))
+* Store Firebase client keys config for Node.js as `./.secret/firebase-client-keys.json` ([help](https://firebase.google.com/docs/web/setup))
+
+
+## Deploy and test locally
+
+* Install [Cloud Functions Local Emulator](https://cloud.google.com/functions/docs/emulator)
+* Start local emulator by executing `functions start`
+* Deploy locally by executing `npm run deploy:local`
+
+## Deploy to cloud
+
+### Setup GCP
+* Setup a new GCP Project, [here](https://console.cloud.google.com/)
+* Setup GCP Cloud Functions, [here](https://console.cloud.google.com/functions)
+* Create a new Storage bucket to stage Cloud Functions code, [here](https://console.cloud.google.com/storage)
+
+### Deploy to GCP
+* Modify `--stage-bucket=gs://<YOUR_BUCKET_HERE>` in `package.json`
+* Deploy to cloud by executing `npm run deploy:cloud`
