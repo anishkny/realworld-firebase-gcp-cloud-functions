@@ -1,6 +1,6 @@
-# ![RealWorld Example App](logo.png)
-
 **Work in progress!!!**
+
+# ![RealWorld Example App](logo.png)
 
 > ### Firebase + GCP Cloud Functions codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld-example-apps) spec and API.
 
