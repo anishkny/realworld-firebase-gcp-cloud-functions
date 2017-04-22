@@ -11,6 +11,8 @@
 *.launch
 .settings/
 
+# API keys and such
+.secret/
 
 #System Files
 .DS_Store
