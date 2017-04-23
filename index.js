@@ -12,10 +12,11 @@ firebase.initializeApp(require('./.secret/firebase-client-keys.json'));
 // Entry point function
 exports.api = function (req, res) {
   console.log(`entryPoint called, req.method: [${req.method}], req.path: [${req.path}], req.params: [${JSON.stringify(req.params)}], req.body: [${JSON.stringify(req.body)}]`);
-
+  res.setHeader('Content-Type', 'application/json');
   var routeHandlers = {
     '/users/login': handleLogin,
-    '/user': handleGetUser,
+    '/user': handleUserRoute,
+    '/articles': handleArticlesRoute,
     '/ping': pong,      // For debugging purposes
   };
 
@@ -44,12 +45,11 @@ function handleLogin(req, res, keys) {
   var email = req.body.user.email;
   var password = req.body.user.password;
   console.log('handleLogin called, email: [' + email + '], password: [' + password + ']');
-  res.setHeader('Content-Type', 'application/json');
   firebase.auth().signInWithEmailAndPassword(email, password)
     .then(function (user) {
       // Since Firebase does not support "bio" natively, lets cheat and store it in displayName
-      var username = user.displayName ? user.displayName.split('\n')[0] : 'unset';
-      var bio = user.displayName ? user.displayName.split('\n')[1] : 'unset';
+      var username = user.displayName ? user.displayName.split('\n')[0] : user.email;
+      var bio = user.displayName ? user.displayName.split('\n')[1] : 'Not filled yet...';
       firebase.auth().currentUser.getToken(/* forceRefresh */ false)
         .then(function (token) {
           res.status(200).send(JSON.stringify({
@@ -72,42 +72,111 @@ function handleLogin(req, res, keys) {
     });
 }
 
-function handleGetUser(req, res, keys) {
+function handleUserRoute(req, res, keys) {
+  if (req.method == 'GET') {
+    getUserFromAuthToken(req)
+      .then(function (user) {
+        res.status(200).send(JSON.stringify({
+          user: user
+        }));
+      })
+      .catch(function (error) {
+        res.status(422).send(JSON.stringify({
+          errors: {
+            body: [
+              error
+            ]
+          }
+        }));
+      });
+  }
+}
+
+function handleArticlesRoute(req, res, keys) {
+  if (req.method == 'POST') {
+    // Create new article, expect req.body to be like: 
+    // {"article":{"title":"How to train your dragon", "body":"Very carefully.", "tagList":["dragons","training"]}}
+    var article = req.body.article;
+    article.tags = {};
+    var tagList = article.tagList;
+    delete (article.tagList);
+
+    // Construct an atomic transaction that updates articles, tags and slugs
+    var transaction = {};
+    var database = admin.database();
+    var newArticleKey = database.ref('/articles/').push().key;
+    article.slug = slugify(article.title) + newArticleKey;  // Uniqify slug by adding article key
+    transaction['/slugs/' + article.slug] = newArticleKey;
+    tagList.forEach(function (tag) {
+      article.tags[tag] = true;
+      transaction['/tags/' + tag + '/' + newArticleKey] = true;
+    });
+
+    getUserFromAuthToken(req, res)
+      .then(function (user) {
+        article.author = user;
+        article.createdAt = (new Date()).toISOString();
+        article.updatedAt = article.createdAt;
+        article.favorited = false;
+        article.favoritesCount = 0;
+        transaction['/articles/' + newArticleKey] = article;
+        return database.ref().update(transaction);
+      })
+      .then(function () {
+        var responseArticle = article;
+        responseArticle.tagList = tagList || [];
+        res.status(200).send(JSON.stringify({
+          article: responseArticle
+        }));
+      })
+      .catch(function (error) {
+        res.status(422).send(JSON.stringify({
+          errors: {
+            body: [
+              error
+            ]
+          }
+        }));
+      });
+    console.log(JSON.stringify(transaction, null, 2));
+  }
+}
+
+
+// ----- Helper functions
+function getUserFromAuthToken(req, res) {
   var rawToken = req.get('Authorization');
   var match = rawToken.match(/Token (.*)/);
   if (!match || !match[1]) {
     var error = 'In handleGetUser, could not extract token from: [' + rawToken + ']';
     console.log(error);
-    res.status(500).send(error);
-    return;
+    res.status(422).send({
+      errors: {
+        body: [
+          error
+        ]
+      }
+    });
+    return null;
   }
-  console.log('handleGetUser called with token');
-  res.setHeader('Content-Type', 'application/json');
+
   var token = match[1];
-  admin.auth().verifyIdToken(token)
+  return admin.auth().verifyIdToken(token)
     .then(function (decodedToken) {
       var uid = decodedToken.uid;
-      admin.auth().getUser(uid)
+      return admin.auth().getUser(uid)
         .then(function (user) {
-          var username = user.displayName ? user.displayName.split('\n')[0] : 'unset';
-          var bio = user.displayName ? user.displayName.split('\n')[1] : 'unset';
-          res.status(200).send(JSON.stringify({
-            user: {
-              id: uid,
-              email: user.email,
-              username: username,
-              bio: bio,
-              image: user.photoURL || 'https://static.productionready.io/images/smiley-cyrus.jpg',
-              token: token,
-            }
-          }));
-        })
-        .catch(function (error) {
-          res.status(500).send('Error in handleGetUser>getUser: ' + JSON.stringify(error));
+          var username = user.displayName ? user.displayName.split('\n')[0] : user.email;
+          var bio = user.displayName ? user.displayName.split('\n')[1] : 'Not filled yet...';
+          return {
+            id: uid,
+            email: user.email,
+            username: username,
+            bio: bio,
+            image: user.photoURL || 'https://static.productionready.io/images/smiley-cyrus.jpg',
+            token: token,
+          };
         });
-    })
-    .catch(function (error) {
-      res.status(500).send('Error in handleGetUser>verifyIdToken: ' + JSON.stringify(error));
     });
 }
 
@@ -115,4 +184,14 @@ function pong(req, res, keys) {
   res.status(200).send(JSON.stringify({
     message: 'pong! ' + (new Date())
   }, null, 2) + "\n");
+}
+
+// Source: https://gist.github.com/mathewbyrne/1280286
+function slugify(text) {
+  return text.toString().toLowerCase().trim()
+    .replace(/\s+/g, '-')           // Replace spaces with -
+    .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+    .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+    .replace(/^-+/, '')             // Trim - from start of text
+    .replace(/-+$/, '');            // Trim - from end of text
 }
