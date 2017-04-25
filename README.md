@@ -44,3 +44,67 @@ Authentication and Database are handled by [Firebase](https://firebase.google.co
 ### Deploy to GCP
 * Modify `--stage-bucket=gs://<YOUR_BUCKET_HERE>` in `package.json`
 * Deploy to cloud by executing `npm run deploy:cloud`
+
+## Database design 
+*Still evolving...*
+
+```javascript
+{
+  "articles" : {
+  
+    "-KiNiSoqkq1HRuoylJhT" : {      // Article id (primary key)
+      "author" : {
+        "bio" : "Not filled yet...",
+        "email" : "john@jacob.com",
+        "id" : "vr7ovTnSy9VRQScqr18E7WcuWmc2",
+        "image" : "https://static.productionready.io/images/smiley-cyrus.jpg",
+        "token" : "eyJhbGciOiJSUzI1NiI...",
+        "username" : "john@jacob.com"
+      },
+      "body" : "Very carefully.",
+      "createdAt" : "2017-04-23T02:52:49.946Z",
+      "description" : "Ever wonder how?",
+      "favorited" : false,
+      "favoritesCount" : 0,
+      "slug" : "how-to-train-your-dragon-KiNiSoqkq1HRuoylJhT",
+      "tags" : {
+        "dragons" : true,
+        "training" : true
+      },
+      "title" : "How to train your dragon",
+      "updatedAt" : "2017-04-23T02:52:49.946Z"
+    },
+
+    "-JhLeOlGIEjaIOFHR0xd" : {
+      ... another article ..
+    },
+
+    "-JhQ7APk0UtyRTFO9-TS" : {      
+      ... another article, and so on ..
+    },
+
+
+  },      // End of articles "table"
+  
+  "slugs" : {       // Maps slugs back to article id
+    "how-to-train-your-dragon-KiNiSoqkq1HRuoylJhT" : "-KiNiSoqkq1HRuoylJhT",
+    "another-cool-article-JhQ76OEK_848CkIFhAq": "-JhQ76OEK_848CkIFhAq",
+    ...
+  },
+  
+  "tags" : {        // Lists articles ids under each tag
+    "dragons" : {
+      "-KiNiSoqkq1HRuoylJhT" : true
+      "-JhLeOlGIEjaIOFHR0xd" : true
+      ...
+    },
+    "training" : {
+      "-KiNiSoqkq1HRuoylJhT" : true
+      "-JhQ76OEK_848CkIFhAq" : true
+      "-JhQ7APk0UtyRTFO9-TS" : true
+      ...
+    }
+  }
+}
+
+```
