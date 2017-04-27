@@ -17,6 +17,7 @@ exports.api = function (req, res) {
     '/users/login': handleLogin,
     '/user': handleUserRoute,
     '/articles': handleArticlesRoute,
+    '/tags': handleTagsRoute,
     '/ping': pong,      // For debugging purposes
   };
 
@@ -142,6 +143,22 @@ function handleArticlesRoute(req, res, keys) {
   }
 }
 
+function handleTagsRoute(req, res, keys) {
+  if (req.method == 'GET') {
+    admin.database().ref('/tags/').once('value', function (snapshot) {
+      var tags = {};
+      var val = snapshot.val();
+      if (val) {
+        tags = Object.keys(val);
+      }
+      res.status(200).send(JSON.stringify({
+        tags: tags
+      }));
+    }, function (error) {
+      res.status(422).send(JSON.stringify({ errors: { body: [error] } }));
+    });
+  }
+}
 
 // ----- Helper functions
 function getUserFromAuthToken(req, res) {
