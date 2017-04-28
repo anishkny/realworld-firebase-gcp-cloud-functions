@@ -9,6 +9,8 @@ admin.initializeApp({
 
 firebase.initializeApp(require('./.secret/firebase-client-keys.json'));
 
+var loggedInUser = null;
+
 // Entry point function
 exports.api = function (req, res) {
   console.log(`entryPoint called, req.method: [${req.method}], req.path: [${req.path}], req.params: [${JSON.stringify(req.params)}], req.body: [${JSON.stringify(req.body)}]`);
@@ -21,25 +23,39 @@ exports.api = function (req, res) {
     '/ping': pong,      // For debugging purposes
   };
 
-  var wasAbleToMatchRoute = false;
-  Object.keys(routeHandlers).sort().forEach(function (thisRoute) {
-    // Break early if a previous route matched
-    if (wasAbleToMatchRoute) {
+  // Check if auth token is present
+  if (!req.get('Authorization')) {
+    loggedInUser = null;
+    callHandlerForRoute();
+  } else {
+    getUserFromAuthToken(req, res)
+      .then(callHandlerForRoute)
+      .catch(function(error) {
+        res.status(422).send(JSON.stringify({ errors: { body: ['Could not get user from auth token.'] } }));
+      });
+  }
+
+  function callHandlerForRoute() {
+    var wasAbleToMatchRoute = false;
+    Object.keys(routeHandlers).sort().forEach(function (thisRoute) {
+      // Break early if a previous route matched
+      if (wasAbleToMatchRoute) {
+        return;
+      }
+      var matchedPathKeys = (new routeParser(thisRoute)).match(req.path);
+      if (matchedPathKeys) {
+        console.log('Matched path: [' + thisRoute + '], keys: [' + JSON.stringify(matchedPathKeys) + ']');
+        wasAbleToMatchRoute = true;
+        routeHandlers[thisRoute](req, res, matchedPathKeys);
+      }
+    });
+    if (!wasAbleToMatchRoute) {
+      console.log('Could not match path!');
+      res.status(422).send(JSON.stringify({ errors: { body: ['Could not match route.'] } }));
       return;
     }
-    var matchedPathKeys = (new routeParser(thisRoute)).match(req.path);
-    if (matchedPathKeys) {
-      console.log('Matched path: [' + thisRoute + '], keys: [' + JSON.stringify(matchedPathKeys) + ']');
-      wasAbleToMatchRoute = true;
-      routeHandlers[thisRoute](req, res, matchedPathKeys);
-    }
-  });
-
-  if (!wasAbleToMatchRoute) {
-    console.log('Could not match path!');
-    res.status(500).send();
-    return;
   }
+
 }
 
 function handleLogin(req, res, keys) {
@@ -167,13 +183,7 @@ function getUserFromAuthToken(req, res) {
   if (!match || !match[1]) {
     var error = 'In handleGetUser, could not extract token from: [' + rawToken + ']';
     console.log(error);
-    res.status(422).send({
-      errors: {
-        body: [
-          error
-        ]
-      }
-    });
+    res.status(422).send({ errors: { body: [error] } });
     return null;
   }
 
@@ -185,7 +195,7 @@ function getUserFromAuthToken(req, res) {
         .then(function (user) {
           var username = user.displayName ? user.displayName.split('\n')[0] : user.email;
           var bio = user.displayName ? user.displayName.split('\n')[1] : 'Not filled yet...';
-          return {
+          loggedInUser = {
             id: uid,
             email: user.email,
             username: username,
@@ -193,6 +203,7 @@ function getUserFromAuthToken(req, res) {
             image: user.photoURL || 'https://static.productionready.io/images/smiley-cyrus.jpg',
             token: token,
           };
+          return loggedInUser;
         });
     });
 }
