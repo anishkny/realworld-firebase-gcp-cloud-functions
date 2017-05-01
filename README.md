@@ -56,10 +56,10 @@ Authentication and Database are handled by [Firebase](https://firebase.google.co
       "author" : {
         "bio" : "Not filled yet...",
         "email" : "john@jacob.com",
-        "id" : "vr7ovTnSy9VRQScqr18E7WcuWmc2",
+        "id" : "ZZVqhcFvT2Mnz4NaIIK05hSm4ht1",
         "image" : "https://static.productionready.io/images/smiley-cyrus.jpg",
         "token" : "eyJhbGciOiJSUzI1NiI...",
-        "username" : "john@jacob.com"
+        "username" : "johnjacob"
       },
       "body" : "Very carefully.",
       "createdAt" : "2017-04-23T02:52:49.946Z",
@@ -104,6 +104,11 @@ Authentication and Database are handled by [Firebase](https://firebase.google.co
       "-JhQ7APk0UtyRTFO9-TS" : true
       ...
     }
+  },
+  
+  "usernames": {
+    "johnjacob": "ZZVqhcFvT2Mnz4NaIIK05hSm4ht1",
+    ...
   }
 }
 
