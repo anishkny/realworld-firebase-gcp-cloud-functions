@@ -17,6 +17,7 @@ exports.api = function (req, res) {
   res.setHeader('Content-Type', 'application/json');
   var routeHandlers = {
     '/users/login': handleLogin,
+    '/users': handleUsersRoute,
     '/user': handleUserRoute,
     '/articles': handleArticlesRoute,
     '/tags': handleTagsRoute,
@@ -96,6 +97,50 @@ function handleUserRoute(req, res, keys) {
     } else {
       res.status(422).send(JSON.stringify({ errors: { body: ['Could not get current user.'] } }));
     }
+  }
+}
+
+function handleUsersRoute(req, res, keys) {
+  // Signup new user
+  if (req.method == 'POST') {
+    var email = req.body.user.email;
+    var password = req.body.user.password;
+    var username = req.body.user.username;
+    if (!email || !password || !username) {
+      res.status(422).send(JSON.stringify({ errors: { body: ['Email, password and username are required.'] } }));
+      return;
+    }
+
+    // Check if username exists
+    admin.database().ref('/usernames/' + username).once('value', function (snapshot) {
+      // Snapshot should be null, because this username should not exist previously
+      if (snapshot.val()) {
+        res.status(422).send(JSON.stringify({ errors: { body: ['Username is already taken.'] } }));
+        return;
+      }
+      admin.auth().createUser({
+        email: email,
+        password: password,
+        displayName: username + "\n\n",
+      }).then(function (user) {
+        admin.database().ref('/usernames/' + username).set(user.uid);
+        admin.auth().createCustomToken(user.uid)
+          .then(function (token) {
+            res.status(200).send(JSON.stringify({
+              email: email,
+              token: token,
+              username: username,
+              bio: null,
+              image: null,
+            }));
+          })
+          .catch(function (error) {
+            res.status(422).send(JSON.stringify({ errors: { body: [error] } }));
+          });
+      }).catch(function (error) {
+        res.status(422).send(JSON.stringify({ errors: { body: [error] } }));
+      });
+    });
   }
 }
 
