@@ -30,7 +30,7 @@ exports.api = function (req, res) {
   } else {
     getUserFromAuthToken(req, res)
       .then(callHandlerForRoute)
-      .catch(function(error) {
+      .catch(function (error) {
         res.status(422).send(JSON.stringify({ errors: { body: ['Could not get user from auth token.'] } }));
       });
   }
@@ -91,21 +91,11 @@ function handleLogin(req, res, keys) {
 
 function handleUserRoute(req, res, keys) {
   if (req.method == 'GET') {
-    getUserFromAuthToken(req)
-      .then(function (user) {
-        res.status(200).send(JSON.stringify({
-          user: user
-        }));
-      })
-      .catch(function (error) {
-        res.status(422).send(JSON.stringify({
-          errors: {
-            body: [
-              error
-            ]
-          }
-        }));
-      });
+    if (loggedInUser) {
+      res.status(200).send(JSON.stringify(loggedInUser));
+    } else {
+      res.status(422).send(JSON.stringify({ errors: { body: ['Could not get current user.'] } }));
+    }
   }
 }
 
