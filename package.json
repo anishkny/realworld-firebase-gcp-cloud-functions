@@ -22,5 +22,8 @@
     "firebase": "^3.8.0",
     "firebase-admin": "^4.2.1",
     "route-parser": "^0.0.5"
+  },
+  "devDependencies": {
+    "newman": "^3.6.0"
   }
 }

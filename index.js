@@ -93,10 +93,26 @@ function handleLogin(req, res, keys) {
 function handleUserRoute(req, res, keys) {
   if (req.method == 'GET') {
     if (loggedInUser) {
-      res.status(200).send(JSON.stringify(loggedInUser));
+      res.status(200).send(JSON.stringify({
+        user: loggedInUser
+      }));
     } else {
       res.status(422).send(JSON.stringify({ errors: { body: ['Could not get current user.'] } }));
     }
+  } else if (req.method == 'PUT') {
+    var userProfileMutation = {};
+    if (req.body.user.email) {
+      userProfileMutation.email = req.body.user.email;
+    }
+    admin.auth().updateUser(loggedInUser.id, userProfileMutation)
+      .then(function(user) {
+        res.status(200).send(JSON.stringify({
+          user: getConduitUserFromFirebaseUser(user, loggedInUser.token)
+        }));
+      })
+      .catch(function(error) {
+        res.status(422).send(JSON.stringify({ errors: { body: ['Could not get update user.'] } }));
+      });
   }
 }
 
@@ -146,7 +162,7 @@ function handleUsersRoute(req, res, keys) {
 
 function handleArticlesRoute(req, res, keys) {
   if (req.method == 'POST') {
-    // Create new article, expect req.body to be like: 
+    // Create new article, expect req.body to be like:
     // {"article":{"title":"How to train your dragon", "body":"Very carefully.", "tagList":["dragons","training"]}}
     var article = req.body.article;
     article.tags = {};
@@ -228,19 +244,23 @@ function getUserFromAuthToken(req, res) {
       var uid = decodedToken.uid;
       return admin.auth().getUser(uid)
         .then(function (user) {
-          var username = user.displayName ? user.displayName.split('\n')[0] : user.email;
-          var bio = user.displayName ? user.displayName.split('\n')[1] : 'Not filled yet...';
-          loggedInUser = {
-            id: uid,
-            email: user.email,
-            username: username,
-            bio: bio,
-            image: user.photoURL || 'https://static.productionready.io/images/smiley-cyrus.jpg',
-            token: token,
-          };
+          loggedInUser = getConduitUserFromFirebaseUser(user, token);
           return loggedInUser;
         });
     });
+}
+
+function getConduitUserFromFirebaseUser(user, token) {
+  var username = user.displayName ? user.displayName.split('\n')[0] : user.email;
+  var bio = user.displayName ? user.displayName.split('\n')[1] : 'Not filled yet...';
+  return {
+    id: user.uid,
+    email: user.email,
+    username: username,
+    bio: bio,
+    image: user.photoURL || 'https://static.productionready.io/images/smiley-cyrus.jpg',
+    token: token,
+  }
 }
 
 function pong(req, res, keys) {
