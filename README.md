@@ -21,12 +21,14 @@ Authentication and Database are handled by [Firebase](https://firebase.google.co
 
 # Getting started
 
+Coming soon...
+
+<!--
 ## Setup Firebase
 
 * Setup a new Firebase project, [here](http://firebase.google.com)
-* Store Firebase admin keys as `./.secret/firebase-admin-keys.json`  ([help](https://firebase.google.com/docs/admin/setup))
-* Store Firebase client keys config for Node.js as `./.secret/firebase-client-keys.json` ([help](https://firebase.google.com/docs/web/setup))
-
+* Store Firebase admin keys as `./secret/firebase-admin-keys.json`  ([help](https://firebase.google.com/docs/admin/setup))
+* Store Firebase client keys config for Node.js as `./secret/firebase-client-keys.json` ([help](https://firebase.google.com/docs/web/setup))
 
 ## Deploy and test locally
 
@@ -44,72 +46,4 @@ Authentication and Database are handled by [Firebase](https://firebase.google.co
 ### Deploy to GCP
 * Modify `--stage-bucket=gs://<YOUR_BUCKET_HERE>` in `package.json`
 * Deploy to cloud by executing `npm run deploy:cloud`
-
-## Database design 
-*Still evolving...*
-
-```javascript
-{
-  "articles" : {
-  
-    "-KiNiSoqkq1HRuoylJhT" : {      // Article id (primary key)
-      "author" : {
-        "bio" : "Not filled yet...",
-        "email" : "john@jacob.com",
-        "id" : "ZZVqhcFvT2Mnz4NaIIK05hSm4ht1",
-        "image" : "https://static.productionready.io/images/smiley-cyrus.jpg",
-        "token" : "eyJhbGciOiJSUzI1NiI...",
-        "username" : "johnjacob"
-      },
-      "body" : "Very carefully.",
-      "createdAt" : "2017-04-23T02:52:49.946Z",
-      "description" : "Ever wonder how?",
-      "favorited" : false,
-      "favoritesCount" : 0,
-      "slug" : "how-to-train-your-dragon-KiNiSoqkq1HRuoylJhT",
-      "tags" : {
-        "dragons" : true,
-        "training" : true
-      },
-      "title" : "How to train your dragon",
-      "updatedAt" : "2017-04-23T02:52:49.946Z"
-    },
-
-    "-JhLeOlGIEjaIOFHR0xd" : {
-      ... another article ..
-    },
-
-    "-JhQ7APk0UtyRTFO9-TS" : {      
-      ... another article, and so on ..
-    },
-
-
-  },      // End of articles "table"
-  
-  "slugs" : {       // Maps slugs back to article id
-    "how-to-train-your-dragon-KiNiSoqkq1HRuoylJhT" : "-KiNiSoqkq1HRuoylJhT",
-    "another-cool-article-JhQ76OEK_848CkIFhAq": "-JhQ76OEK_848CkIFhAq",
-    ...
-  },
-  
-  "tags" : {        // Lists articles ids under each tag
-    "dragons" : {
-      "-KiNiSoqkq1HRuoylJhT" : true
-      "-JhLeOlGIEjaIOFHR0xd" : true
-      ...
-    },
-    "training" : {
-      "-KiNiSoqkq1HRuoylJhT" : true
-      "-JhQ76OEK_848CkIFhAq" : true
-      "-JhQ7APk0UtyRTFO9-TS" : true
-      ...
-    }
-  },
-  
-  "usernames": {
-    "johnjacob": "ZZVqhcFvT2Mnz4NaIIK05hSm4ht1",
-    ...
-  }
-}
-
-```
+-->

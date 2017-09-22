@@ -1,0 +1,16 @@
+{
+  "scripts": {
+    "test": "mocha 'src/**/*.test.js'"
+  },
+  "dependencies": {
+    "dotenv": "^4.0.0",
+    "firebase": "^4.4.0",
+    "firebase-admin": "^5.2.1"
+  },
+  "devDependencies": {
+    "casual": "^1.5.17",
+    "chai": "^4.1.2",
+    "jsdoc": "^3.5.5",
+    "mocha": "^3.5.3"
+  }
+}
