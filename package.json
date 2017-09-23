@@ -18,5 +18,7 @@
     "jsdoc": "^3.5.5",
     "mocha": "^3.5.3",
     "newman": "^3.8.2"
-  }
+  },
+  "author": "Anish Karandikar (http://github.com/anishkny)",
+  "license": "MIT"
 }
