@@ -6,7 +6,8 @@
     "dotenv": "^4.0.0",
     "firebase": "^4.4.0",
     "firebase-admin": "^5.2.1",
-    "slug": "^0.9.1"
+    "slug": "^0.9.1",
+    "url-pattern": "^1.0.3"
   },
   "devDependencies": {
     "casual": "^1.5.17",

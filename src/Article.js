@@ -8,7 +8,7 @@ module.exports = {
     if (!aUser) {
       throw new Error('Must be logged in to create article');
     }
-    if (!aArticleData.title || !aArticleData.description || !aArticleData.body) {
+    if (!aArticleData || !aArticleData.title || !aArticleData.description || !aArticleData.body) {
       throw new Error('Article title, description and body are required');
     }
 
@@ -50,6 +50,7 @@ module.exports = {
 
   async get(aSlug) {
     var article = (await admin.database().ref(`/articles/${aSlug}`).once('value')).val();
+    if (!article) {throw new Error(`Article not found: ${aSlug}`);}
     article.slug = aSlug;
 
     // Get author info
@@ -61,6 +62,9 @@ module.exports = {
   },
 
   async delete(aSlug, aUser) {
+    if (!aSlug) { throw new Error('Slug must be specified'); }
+    if (!aUser) { throw new Error('Must be logged in to delete article'); }
+
     // Verify the user who is deleting is the author, else error
     var article = await this.get(aSlug);
     if (article.article.author.username != aUser.user.username) {
