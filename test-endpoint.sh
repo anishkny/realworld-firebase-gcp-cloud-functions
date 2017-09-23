@@ -1,4 +1,4 @@
-#!/bin/sh -e -x
+#!/bin/bash -e -x
 
 which functions
 functions start
