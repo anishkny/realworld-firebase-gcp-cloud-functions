@@ -1,0 +1,262 @@
+{
+  "variables": [],
+  "info": {
+    "name": "Realworld Firebase",
+    "_postman_id": "1c305f6a-8b97-0af4-3a46-a110966bf9f6",
+    "description": "",
+    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+  },
+  "item": [{
+      "name": "Manual",
+      "description": "",
+      "item": [{
+        "name": "Register",
+        "request": {
+          "url": "{{apiUrl}}/users",
+          "method": "POST",
+          "header": [{
+            "key": "Content-Type",
+            "value": "application/json",
+            "description": ""
+          }],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"user\":{\n    \"username\": \"a_at_b\",\n    \"email\": \"a@b.com\",\n    \"password\": \"aaaaaa\"\n  }\n}"
+          },
+          "description": ""
+        },
+        "response": []
+      }]
+    },
+    {
+      "name": "Automated",
+      "description": "",
+      "item": [{
+          "name": "Ping",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "var responseJSON = JSON.parse(responseBody);",
+                "tests['Response contains \"pong\" property'] = responseJSON.hasOwnProperty('pong');",
+                ""
+              ]
+            }
+          }],
+          "request": {
+            "url": "{{apiUrl}}/ping",
+            "method": "GET",
+            "header": [],
+            "body": {},
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "var responseJSON = JSON.parse(responseBody);",
+                "",
+                "tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+                "",
+                "var user = responseJSON.user || {};",
+                "",
+                "tests['User has \"email\" property'] = user.hasOwnProperty('email');",
+                "tests['User has \"username\" property'] = user.hasOwnProperty('username');",
+                "tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+                "",
+                "if(tests['User has \"token\" property']){",
+                "    postman.setEnvironmentVariable('token', user.token);",
+                "}",
+                "",
+                "tests['Environment variable \"token\" has been set'] = environment.token === user.token;",
+                ""
+              ]
+            }
+          }],
+          "request": {
+            "url": "{{apiUrl}}/users/login",
+            "method": "POST",
+            "header": [{
+              "key": "Content-Type",
+              "value": "application/json",
+              "description": ""
+            }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"user\":{\n\t\t\"email\": \"a@b.com\", \n\t\t\"password\": \"aaaaaa\" \n\t} \n}"
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Current User",
+          "request": {
+            "url": "{{apiUrl}}/user",
+            "method": "GET",
+            "header": [{
+                "key": "Content-Type",
+                "value": "application/json",
+                "description": ""
+              },
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "description": ""
+              }
+            ],
+            "body": {},
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Bad Token",
+          "request": {
+            "url": "{{apiUrl}}/ping",
+            "method": "POST",
+            "header": [{
+                "key": "Content-Type",
+                "value": "application/json",
+                "description": ""
+              },
+              {
+                "key": "Authorization",
+                "value": "foobar",
+                "description": ""
+              }
+            ],
+            "body": {},
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "404",
+          "request": {
+            "url": "{{apiUrl}}/nopez",
+            "method": "POST",
+            "header": [{
+              "key": "Content-Type",
+              "value": "application/json",
+              "description": ""
+            }],
+            "body": {},
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Create Article",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "var responseJSON = JSON.parse(responseBody);",
+                "var article = responseJSON.article || {};",
+                "",
+                "tests['Article has \"slug\" property'] = article.hasOwnProperty('slug');",
+                "",
+                "if(tests['Article has \"slug\" property']){",
+                "    postman.setEnvironmentVariable('slug', article.slug);",
+                "}",
+                "",
+                "tests['Environment variable \"slug\" has been set'] = environment.slug === article.slug;",
+                ""
+              ]
+            }
+          }],
+          "request": {
+            "url": "{{apiUrl}}/articles",
+            "method": "POST",
+            "header": [{
+                "key": "Content-Type",
+                "value": "application/json",
+                "description": ""
+              },
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "description": ""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"article\": {\n    \"title\": \"How to train your dragon\",\n    \"description\": \"Ever wonder how?\",\n    \"body\": \"You have to believe\",\n    \"tagList\": [\"reactjs\", \"angularjs\", \"dragons\"]\n  }\n}"
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Get Article",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "var responseJSON = JSON.parse(responseBody);",
+                "var article = responseJSON.article || {};",
+                "",
+                "tests['Article has \"slug\" property'] = article.hasOwnProperty('slug');",
+                "",
+                "if(tests['Article has \"slug\" property']){",
+                "    postman.setEnvironmentVariable('slug', article.slug);",
+                "}",
+                "",
+                "tests['Environment variable \"slug\" has been set'] = environment.slug === article.slug;",
+                ""
+              ]
+            }
+          }],
+          "request": {
+            "url": "{{apiUrl}}/articles/{{slug}}",
+            "method": "GET",
+            "header": [{
+              "key": "Content-Type",
+              "value": "application/json",
+              "description": ""
+            }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"article\": {\n    \"title\": \"How to train your dragon\",\n    \"description\": \"Ever wonder how?\",\n    \"body\": \"You have to believe\",\n    \"tagList\": [\"reactjs\", \"angularjs\", \"dragons\"]\n  }\n}"
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Article",
+          "request": {
+            "url": "{{apiUrl}}/articles/{{slug}}",
+            "method": "DELETE",
+            "header": [{
+                "key": "Content-Type",
+                "value": "application/json",
+                "description": ""
+              },
+              {
+                "key": "Authorization",
+                "value": "{{token}}",
+                "description": ""
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "description": ""
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,6 +1,8 @@
 {
   "scripts": {
-    "test": "mocha 'src/**/*.test.js'"
+    "test": "yarn run test:unit",
+    "test:unit": "mocha 'src/**/*.test.js'",
+    "test:api": "newman run --global-var=\"apiUrl=$API_URL\" --folder Automated ./api-tests.postman.json"
   },
   "dependencies": {
     "dotenv": "^4.0.0",
@@ -13,6 +15,7 @@
     "casual": "^1.5.17",
     "chai": "^4.1.2",
     "jsdoc": "^3.5.5",
-    "mocha": "^3.5.3"
+    "mocha": "^3.5.3",
+    "newman": "^3.8.2"
   }
 }
