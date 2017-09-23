@@ -18,6 +18,9 @@ module.exports = {
       .catch(err => {
         return { status: 422, body: { 'errors': { 'body': err.message } }, }
       });
+    if (!signedInFirebaseUser.getIdToken) {
+      return signedInFirebaseUser;
+    }
     var token = await signedInFirebaseUser.getIdToken();
     return { status: 200, body: transformFirebaseUser(signedInFirebaseUser, token), };
   },
