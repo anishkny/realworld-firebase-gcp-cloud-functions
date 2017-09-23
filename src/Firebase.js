@@ -14,15 +14,21 @@ module.exports = {
     if (!firebase.apps.length) {
       firebase.initializeApp(FIREBASE_CLIENT_KEY);
     }
-    admin.initializeApp({
-      credential: admin.credential.cert(FIREBASE_SERVER_KEY),
-      databaseURL: FIREBASE_DATABASE_URL,
-    });
+    if (!admin.apps.length) {
+      admin.initializeApp({
+        credential: admin.credential.cert(FIREBASE_SERVER_KEY),
+        databaseURL: FIREBASE_DATABASE_URL,
+      });
+    }
   },
 
   async deleteApp() {
-    await firebase.app().delete();
-    await admin.app().delete();
+    if (firebase.apps.length) {
+      await firebase.app().delete();
+    }
+    if (admin.apps.length) {
+      await admin.app().delete();
+    }
   },
 };
 

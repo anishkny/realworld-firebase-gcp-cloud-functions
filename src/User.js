@@ -1,4 +1,4 @@
-var { admin, firebase } = require('./Firebase.js');
+var { admin, firebase } = require('./Firebase');
 
 module.exports = {
 
@@ -32,6 +32,11 @@ module.exports = {
 
   async delete(aUserId) {
     await admin.auth().deleteUser(aUserId);
+  },
+
+  async getByUsername(aUsername) {
+    var firebaseUser = await admin.auth().getUser(aUsername);
+    return transformFirebaseUser(firebaseUser, null);
   },
 
 };
