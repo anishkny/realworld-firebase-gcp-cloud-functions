@@ -78,7 +78,7 @@ module.exports = {
         await admin.database().ref(`/tags/${tag}/${aSlug}`).remove();
       }
     }
-    await firebase.database().ref(`/articles/${aSlug}`).remove();
+    await admin.database().ref(`/articles/${aSlug}`).remove();
   },
 
 };
