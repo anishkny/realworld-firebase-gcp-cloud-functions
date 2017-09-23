@@ -3,7 +3,7 @@ var { initializeApp, deleteApp } = require('./Firebase.js');
 var casual = require('casual');
 var expect = require('chai').expect;
 
-var userToCreate = {
+var testUser = {
   email: casual.email.toLowerCase(),
   password: casual.password,
   username: casual.username,
@@ -19,34 +19,29 @@ after(async() => {
 });
 
 describe('Users', () => {
-  
+
   it('Create user', async() => {
-    var createdUser = await User.create(userToCreate);
-    expect(createdUser.status).to.equal(200);
-    expect(createdUser.body.user.email).to.equal(userToCreate.email);
-    expect(createdUser.body.user.password).to.equal(userToCreate.password);
-    expect(createdUser.body.user.username).to.equal(userToCreate.username);
+    var createdUser = await User.create(testUser);
+    expect(createdUser.user.email).to.equal(testUser.email);
+    expect(createdUser.user.password).to.equal(testUser.password);
+    expect(createdUser.user.username).to.equal(testUser.username);
   });
 
   it('Login user', async() => {
-    var loginResponse = await User.login({
-      email: userToCreate.email,
-      password: userToCreate.password,
+    loggedInUser = await User.login({
+      email: testUser.email,
+      password: testUser.password,
     });
-    loggedInUser = loginResponse.body;
-    expect(loginResponse.status).to.equal(200);
-    expect(loggedInUser.username).to.equal(userToCreate.username);
+    expect(loggedInUser.user.username).to.equal(testUser.username);
   });
 
   it('Validate token for logged in user', async() => {
-    var validationResponse = await User.validateToken(loggedInUser.token);
-    expect(validationResponse.status).to.equal(200);
-    expect(validationResponse.body.user.username).to.equal(userToCreate.username);
+    var validatedUser = await User.validateToken(loggedInUser.user.token);
+    expect(validatedUser.user.username).to.equal(testUser.username);
   });
 
   it('Delete user', async() => {
-    var deleteResponse = await User.delete(userToCreate.username);
-    expect(deleteResponse.status).to.equal(200);
+    await User.delete(testUser.username);
   });
 
 });

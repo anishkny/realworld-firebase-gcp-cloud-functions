@@ -10,7 +10,16 @@ module.exports = {
     }
 
     res.setHeader('Content-Type', 'application/json');
-    await Router.route(req, res);
+    try {
+      await Router.route(req, res);
+    } catch (e) {
+      res.status(422).send({
+        errors: {
+          body: [e.message],
+        }
+      });
+      console.log(e);
+    }
 
     deleteApp();
   }
