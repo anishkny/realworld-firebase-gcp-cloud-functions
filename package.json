@@ -1,8 +1,8 @@
 {
   "scripts": {
-    "test": "yarn run test:unit",
+    "test": "yarn run test:unit && yarn run test:api",
     "test:unit": "mocha 'src/**/*.test.js'",
-    "test:api": "newman run --global-var=\"apiUrl=$API_URL\" --folder Automated ./api-tests.postman.json"
+    "test:api": "./run-api-tests.sh"
   },
   "dependencies": {
     "dotenv": "^4.0.0",
@@ -12,6 +12,7 @@
     "url-pattern": "^1.0.3"
   },
   "devDependencies": {
+    "@google-cloud/functions-emulator": "^1.0.0-alpha.25",
     "casual": "^1.5.17",
     "chai": "^4.1.2",
     "jsdoc": "^3.5.5",
