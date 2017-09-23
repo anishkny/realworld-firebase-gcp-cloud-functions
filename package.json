@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "test": "mocha 'src/**/*.test.js' && ./test-endpoint.sh"
+    "test": "mocha 'src/**/*.test.js'"
   },
   "dependencies": {
     "dotenv": "^4.0.0",
