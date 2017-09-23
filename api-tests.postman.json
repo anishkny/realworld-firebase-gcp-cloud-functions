@@ -2,7 +2,7 @@
   "variables": [],
   "info": {
     "name": "Realworld Firebase",
-    "_postman_id": "1c305f6a-8b97-0af4-3a46-a110966bf9f6",
+    "_postman_id": "1355338e-3b87-9513-4dca-0c9dbb7fb64a",
     "description": "",
     "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
   },
@@ -38,8 +38,10 @@
             "script": {
               "type": "text/javascript",
               "exec": [
+                "tests[\"Status code is 200\"] = responseCode.code === 200;",
                 "var responseJSON = JSON.parse(responseBody);",
                 "tests['Response contains \"pong\" property'] = responseJSON.hasOwnProperty('pong');",
+                "",
                 ""
               ]
             }
@@ -60,20 +62,17 @@
             "script": {
               "type": "text/javascript",
               "exec": [
+                "tests[\"Status code is 200\"] = responseCode.code === 200;",
                 "var responseJSON = JSON.parse(responseBody);",
-                "",
                 "tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
-                "",
                 "var user = responseJSON.user || {};",
-                "",
-                "tests['User has \"email\" property'] = user.hasOwnProperty('email');",
-                "tests['User has \"username\" property'] = user.hasOwnProperty('username');",
-                "tests['User has \"token\" property'] = user.hasOwnProperty('token');",
+                "['email', 'token', 'username', 'bio', 'image'].forEach(function(f) {",
+                "    tests['User has \"' + f + '\" property'] = user.hasOwnProperty(f);",
+                "});",
                 "",
                 "if(tests['User has \"token\" property']){",
                 "    postman.setEnvironmentVariable('token', user.token);",
                 "}",
-                "",
                 "tests['Environment variable \"token\" has been set'] = environment.token === user.token;",
                 ""
               ]
@@ -97,6 +96,22 @@
         },
         {
           "name": "Current User",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                "var responseJSON = JSON.parse(responseBody);",
+                "tests['Response contains \"user\" property'] = responseJSON.hasOwnProperty('user');",
+                "var user = responseJSON.user || {};",
+                "['email', 'token', 'username', 'bio', 'image'].forEach(function(f) {",
+                "    tests['User has \"' + f + '\" property'] = user.hasOwnProperty(f);",
+                "});",
+                ""
+              ]
+            }
+          }],
           "request": {
             "url": "{{apiUrl}}/user",
             "method": "GET",
@@ -118,6 +133,20 @@
         },
         {
           "name": "Bad Token",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "tests[\"Status code is 422\"] = responseCode.code === 422;",
+                "var responseJSON = JSON.parse(responseBody);",
+                "tests['Response contains \"errors\" property'] = responseJSON.hasOwnProperty('errors');",
+                "var errors = responseJSON.errors || {};",
+                "tests['Errors contains \"body\" property'] = errors.hasOwnProperty('body');",
+                ""
+              ]
+            }
+          }],
           "request": {
             "url": "{{apiUrl}}/ping",
             "method": "POST",
@@ -139,6 +168,20 @@
         },
         {
           "name": "404",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "tests[\"Status code is 404\"] = responseCode.code === 404;",
+                "var responseJSON = JSON.parse(responseBody);",
+                "tests['Response contains \"errors\" property'] = responseJSON.hasOwnProperty('errors');",
+                "var errors = responseJSON.errors || {};",
+                "tests['Errors contains \"body\" property'] = errors.hasOwnProperty('body');",
+                ""
+              ]
+            }
+          }],
           "request": {
             "url": "{{apiUrl}}/nopez",
             "method": "POST",
