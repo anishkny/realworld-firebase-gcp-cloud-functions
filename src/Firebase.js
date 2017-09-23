@@ -11,7 +11,9 @@ module.exports = {
   firebase,
 
   initializeApp() {
-    firebase.initializeApp(FIREBASE_CLIENT_KEY);
+    if (!firebase.apps.length) {
+      firebase.initializeApp(FIREBASE_CLIENT_KEY);
+    }
     admin.initializeApp({
       credential: admin.credential.cert(FIREBASE_SERVER_KEY),
       databaseURL: FIREBASE_DATABASE_URL,
