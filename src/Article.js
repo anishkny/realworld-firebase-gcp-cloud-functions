@@ -1,4 +1,4 @@
-var { admin, firebase } = require('./Firebase');
+var { admin } = require('./Firebase');
 var User = require('./User');
 var slug = require('slug');
 

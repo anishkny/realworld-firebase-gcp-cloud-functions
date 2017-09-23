@@ -1,4 +1,4 @@
-var { firebase, initializeApp, deleteApp } = require('./Firebase.js');
+var { initializeApp, deleteApp } = require('./Firebase.js');
 var Router = require('./Router');
 
 module.exports = {
