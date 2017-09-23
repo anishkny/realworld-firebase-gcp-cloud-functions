@@ -2,9 +2,13 @@
 
 # ![RealWorld Example App](logo.png)
 
+[![CircleCI](https://circleci.com/gh/anishkny/realworld-firebase-gcp-cloud-functions.svg)](https://circleci.com/gh/anishkny/realworld-firebase-gcp-cloud-functions)
+
 > ### Firebase + GCP Cloud Functions codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld-example-apps) spec and API.
 
+<!--
 ### [Demo](https://react-redux.realworld.io/#/)&nbsp;&nbsp;&nbsp;&nbsp;[RealWorld](https://github.com/gothinkster/realworld)
+-->
 
 This codebase was created to demonstrate a fully fledged fullstack application built with **Firebase + GCP Cloud Functions** including CRUD operations, authentication, routing, pagination, and more.
 
@@ -21,14 +25,26 @@ Authentication and Database are handled by [Firebase](https://firebase.google.co
 
 # Getting started
 
-Coming soon...
-
-<!--
 ## Setup Firebase
 
 * Setup a new Firebase project, [here](http://firebase.google.com)
-* Store Firebase admin keys as `./secret/firebase-admin-keys.json`  ([help](https://firebase.google.com/docs/admin/setup))
-* Store Firebase client keys config for Node.js as `./secret/firebase-client-keys.json` ([help](https://firebase.google.com/docs/web/setup))
+* Store Firebase service account JSON key as `./secrets/serviceAccountKey.json`  ([help](https://firebase.google.com/docs/admin/setup))
+* Store Firebase client keys config for Node.js as `./secrets/clientKey.json` ([help](https://firebase.google.com/docs/web/setup)) - Note: Make sure this is valid JSON.
+* Store the Firebase database URL endpoint as environment variable `FIREBASE_DATABASE_URL`
+* Execute the following code to populate an `.env` file in the project root folder
+```bash
+echo FIREBASE_SERVER_KEY=`cat ./secrets/serviceAccountKey.json | base64` | tee .env
+echo FIREBASE_CLIENT_KEY=`cat ./secrets/clientKey.json | base64` | tee -a .env
+echo FIREBASE_DATABASE_URL=$FIREBASE_DATABASE_URL | tee -a .env
+```
+
+## Test locally
+```bash
+yarn
+yarn test
+```
+
+<!--
 
 ## Deploy and test locally
 
