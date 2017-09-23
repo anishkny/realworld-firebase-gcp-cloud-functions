@@ -1,5 +1,4 @@
-#!/bin/bash -e -x
-
+#!/bin/bash -x
 which functions
 functions start
 functions clear
