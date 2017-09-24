@@ -1,5 +1,3 @@
-**Work in progress!!!**
-
 # ![RealWorld Example App](logo.png)
 
 [![CircleCI](https://img.shields.io/circleci/project/github/anishkny/realworld-firebase-gcp-cloud-functions.svg)](https://circleci.com/gh/anishkny/realworld-firebase-gcp-cloud-functions)
@@ -18,6 +16,7 @@ We've gone to great lengths to adhere to the **Firebase + GCP Cloud Functions** 
 
 For more information on how to this works with other frontends/backends, head over to the [RealWorld](https://github.com/gothinkster/realworld) repo.
 
+**Work in progress!!!**
 
 # How it works
 
