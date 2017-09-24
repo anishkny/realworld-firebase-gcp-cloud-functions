@@ -1,5 +1,5 @@
-var Article = require('./Article');
-var User = require('./User');
+var Article = require('./Article.js');
+var User = require('./User.js');
 var { initializeApp, deleteApp } = require('./Firebase.js');
 var casual = require('casual');
 var expect = require('chai').expect;

@@ -1,5 +1,5 @@
-var { admin } = require('./Firebase');
-var User = require('./User');
+var { admin } = require('./Firebase.js');
+var User = require('./User.js');
 var slug = require('slug');
 
 module.exports = {

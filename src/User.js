@@ -1,4 +1,4 @@
-var { admin, firebase } = require('./Firebase');
+var { admin, firebase } = require('./Firebase.js');
 
 module.exports = {
 

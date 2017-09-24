@@ -1,4 +1,4 @@
-var User = require('./User');
+var User = require('./User.js');
 var { initializeApp, deleteApp } = require('./Firebase.js');
 var casual = require('casual');
 var expect = require('chai').expect;

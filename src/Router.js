@@ -1,5 +1,5 @@
-var User = require('./User');
-var Article = require('./Article');
+var User = require('./User.js');
+var Article = require('./Article.js');
 var urlPattern = require('url-pattern');
 
 module.exports = {

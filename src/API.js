@@ -1,5 +1,5 @@
 var { initializeApp, deleteApp } = require('./Firebase.js');
-var Router = require('./Router');
+var Router = require('./Router.js');
 
 module.exports = {
 
@@ -16,7 +16,7 @@ module.exports = {
       res.status(422).send({ errors: { body: [e.message], } });
     }
 
-    deleteApp();
+    await deleteApp();
   }
 
 };
