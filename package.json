@@ -1,7 +1,7 @@
 {
   "scripts": {
     "test": "yarn run test:unit && yarn run test:api",
-    "test:unit": "mocha 'src/**/*.test.js'",
+    "test:unit": "nyc --reporter=html --reporter=text mocha 'src/**/*.test.js'",
     "test:api": "./run-api-tests.sh"
   },
   "dependencies": {
@@ -17,7 +17,8 @@
     "chai": "^4.1.2",
     "jsdoc": "^3.5.5",
     "mocha": "^3.5.3",
-    "newman": "^3.8.2"
+    "newman": "^3.8.2",
+    "nyc": "^11.2.1"
   },
   "author": "Anish Karandikar (http://github.com/anishkny)",
   "license": "MIT"

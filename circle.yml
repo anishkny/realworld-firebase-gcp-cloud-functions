@@ -2,6 +2,10 @@ machine:
   node:
     version: 8.5.0
 
+general:
+  artifacts:
+    - "coverage"
+
 dependencies:
   override:
     - yarn
