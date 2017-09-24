@@ -15,3 +15,4 @@ test:
     - yarn test
   post:
     - yarn coveralls
+    - bash <(curl -s https://codecov.io/bash)
