@@ -3,7 +3,7 @@
     "test": "yarn run test:unit && yarn run test:api",
     "test:unit": "nyc --reporter=html --reporter=text --reporter=lcov mocha 'src/**/*.test.js'",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
-    "test:api": "./run-api-tests.sh"
+    "test:api": "./etc/run-api-tests.sh"
   },
   "dependencies": {
     "dotenv": "^4.0.0",

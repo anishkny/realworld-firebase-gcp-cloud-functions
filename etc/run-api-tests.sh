@@ -11,4 +11,4 @@ echo $API_URL
 
 ## Run Postman tests against local deployed API
 which newman
-newman run --global-var="apiUrl=$API_URL" --folder Automated ./api-tests.postman.json
+newman run --global-var="apiUrl=$API_URL" --folder Automated ./etc/api-tests.postman.json
