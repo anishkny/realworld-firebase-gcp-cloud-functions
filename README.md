@@ -1,4 +1,4 @@
-# ![RealWorld Example App](etc/logo.png)
+# ![RealWorld Example App](logo.png)
 
 [![CircleCI](https://img.shields.io/circleci/project/github/anishkny/realworld-firebase-gcp-cloud-functions.svg)](https://circleci.com/gh/anishkny/realworld-firebase-gcp-cloud-functions)
 [![Coveralls](https://img.shields.io/coveralls/anishkny/realworld-firebase-gcp-cloud-functions.svg)](https://coveralls.io/github/anishkny/realworld-firebase-gcp-cloud-functions)
