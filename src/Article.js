@@ -50,7 +50,9 @@ module.exports = {
 
   async get(aSlug) {
     var article = (await admin.database().ref(`/articles/${aSlug}`).once('value')).val();
-    if (!article) {throw new Error(`Article not found: ${aSlug}`);}
+    if (!article) {
+      throw new Error(`Article not found: ${aSlug}`);
+    }
     article.slug = aSlug;
 
     // Get author info
@@ -58,17 +60,21 @@ module.exports = {
     article.author.bio = authorUser.user.bio;
     article.author.image = authorUser.user.image;
     article.author.following = false;
-    return {article};
+    return { article };
   },
 
   async delete(aSlug, aUser) {
-    if (!aSlug) { throw new Error('Slug must be specified'); }
-    if (!aUser) { throw new Error('Must be logged in to delete article'); }
+    if (!aSlug) {
+      throw new Error('Slug must be specified');
+    }
+    if (!aUser) {
+      throw new Error('Must be logged in to delete article');
+    }
 
     // Verify the user who is deleting is the author, else error
     var article = await this.get(aSlug);
     if (article.article.author.username != aUser.user.username) {
-      throw new Error('Only author [${article.article.author.username}] can delete this article.');
+      throw new Error(`Only author [${article.article.author.username}] can delete this article.`);
     }
 
     // Remove this article from any tag references

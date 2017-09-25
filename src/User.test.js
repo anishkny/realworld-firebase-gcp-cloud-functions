@@ -20,14 +20,14 @@ after(async() => {
 
 describe('Users', () => {
 
-  it('Create user', async() => {
+  it('create', async() => {
     var createdUser = await User.create(testUser);
     expect(createdUser.user.email).to.equal(testUser.email);
     expect(createdUser.user.password).to.equal(testUser.password);
     expect(createdUser.user.username).to.equal(testUser.username);
   });
 
-  it('Login user', async() => {
+  it('login', async() => {
     loggedInUser = await User.login({
       email: testUser.email,
       password: testUser.password,
@@ -35,12 +35,12 @@ describe('Users', () => {
     expect(loggedInUser.user.username).to.equal(testUser.username);
   });
 
-  it('Validate token for logged in user', async() => {
+  it('validateToken', async() => {
     var validatedUser = await User.validateToken(loggedInUser.user.token);
     expect(validatedUser.user.username).to.equal(testUser.username);
   });
 
-  it('Delete user', async() => {
+  it('delete', async() => {
     await User.delete(testUser.username);
   });
 
