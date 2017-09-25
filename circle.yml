@@ -16,3 +16,10 @@ test:
   post:
     - yarn coveralls
     - bash <(curl -s https://codecov.io/bash)
+
+notify:
+  webhooks:
+    # A list of hook hashes, containing the url field
+    # gitter hook
+    - url: https://webhooks.gitter.im/e/f572e31a5e9224ea1f65
+
