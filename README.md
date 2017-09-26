@@ -1,5 +1,7 @@
 # ![RealWorld Example App](logo.png)
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/anishkny/realworld-firebase-gcp-cloud-functions.svg)](https://greenkeeper.io/)
+
 [![CircleCI](https://img.shields.io/circleci/project/github/anishkny/realworld-firebase-gcp-cloud-functions.svg)](https://circleci.com/gh/anishkny/realworld-firebase-gcp-cloud-functions)
 [![Coveralls](https://img.shields.io/coveralls/anishkny/realworld-firebase-gcp-cloud-functions.svg)](https://coveralls.io/github/anishkny/realworld-firebase-gcp-cloud-functions)
 [![Gitter](https://img.shields.io/gitter/room/realworld-dev/firebase-gcp.svg)](https://gitter.im/realworld-dev/firebase-gcp)
