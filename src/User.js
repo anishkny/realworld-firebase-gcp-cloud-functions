@@ -30,6 +30,41 @@ module.exports = {
     return transformFirebaseUser(firebaseUser, aToken);
   },
 
+  async update(aUserId, aToken, aUserMutation) {
+    if (!aUserId) {
+      throw new Error('Username must be specified');
+    }
+    if (!aToken) {
+      throw new Error('Token must be specified');
+    }
+    if (!aUserMutation) {
+      return null;
+    }
+    var firebaseUserMutation = {};
+    var allowedMutationKeys = ['email', 'password', 'image', 'bio'];
+    var mutationKeys = Object.keys(aUserMutation);
+    if (mutationKeys.length == 0) {
+      return null;
+    }
+    mutationKeys.forEach(key => {
+      if (!allowedMutationKeys.includes(key)) {
+        throw new Error(`Unexpected mutation: [${key}]`);
+      }
+      switch (key) {
+        case 'image':
+          firebaseUserMutation.photoURL = aUserMutation.image;
+          break;
+        case 'bio':
+          firebaseUserMutation.displayName = aUserMutation.bio;
+          break;
+        default:
+          firebaseUserMutation[key] = aUserMutation[key];
+      }
+    });
+    var updatedUser = await admin.auth().updateUser(aUserId, firebaseUserMutation);
+    return transformFirebaseUser(updatedUser, aToken);
+  },
+
   async delete(aUserId) {
     await admin.auth().deleteUser(aUserId);
   },
