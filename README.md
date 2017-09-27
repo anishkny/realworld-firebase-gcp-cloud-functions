@@ -41,8 +41,8 @@ echo FIREBASE_DATABASE_URL=$FIREBASE_DATABASE_URL | tee -a .env
 
 ## Test locally
 ```bash
-yarn
-yarn test
+npm install
+npm test
 ```
 _Having trouble setting things up? Come say :wave: here_ [![Gitter](https://img.shields.io/gitter/room/realworld-dev/firebase-gcp.svg)](https://gitter.im/realworld-dev/firebase-gcp)
 

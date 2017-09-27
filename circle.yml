@@ -6,18 +6,11 @@ general:
   artifacts:
     - "coverage"
 
-dependencies:
-  override:
-    - yarn
-
 test:
-  override:
-    - yarn test
   post:
-    - yarn coveralls
+    - npm run coveralls
     - bash <(curl -s https://codecov.io/bash)
 
 notify:
   webhooks:
     - url: https://webhooks.gitter.im/e/f572e31a5e9224ea1f65
-
