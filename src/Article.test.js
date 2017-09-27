@@ -11,13 +11,12 @@ var testUser = {
 };
 var loggedInUser = {};
 
-var testArticle = {
-  title: casual.title,
-  description: casual.description,
-  body: casual.text,
-  tagList: casual.array_of_words(Math.ceil(10 * Math.random())),
-};
+var testArticle = createTestArticleData();
+var testArticleNoTags = createTestArticleData();
+delete testArticleNoTags.tagList
+
 var createdArticle = {};
+var createdArticleNoTags = {};
 
 before(async() => {
   initializeApp();
@@ -41,6 +40,9 @@ describe('Article', () => {
   it('create', async() => {
     createdArticle = await Article.create(testArticle, loggedInUser);
     // TODO: Assert on createdArticle
+
+    createdArticleNoTags = await Article.create(testArticleNoTags, loggedInUser);
+    // TODO: Assert on createdArticleNoTags
 
     await Article.create(null, loggedInUser).catch(e => {
       expect(e.message).to.match(/Article title, description and body are required/);
@@ -76,6 +78,16 @@ describe('Article', () => {
     });
 
     await Article.delete(createdArticle.article.slug, loggedInUser);
+    await Article.delete(createdArticleNoTags.article.slug, loggedInUser);
   });
 
 });
+
+function createTestArticleData() {
+  return {
+    title: casual.title,
+    description: casual.description,
+    body: casual.text,
+    tagList: casual.array_of_words(Math.ceil(10 * Math.random())),
+  }
+}

@@ -2,6 +2,7 @@
 
 [![CircleCI](https://img.shields.io/circleci/project/github/anishkny/realworld-firebase-gcp-cloud-functions.svg)](https://circleci.com/gh/anishkny/realworld-firebase-gcp-cloud-functions)
 [![Coveralls](https://img.shields.io/coveralls/anishkny/realworld-firebase-gcp-cloud-functions.svg)](https://coveralls.io/github/anishkny/realworld-firebase-gcp-cloud-functions)
+[![Greenkeeper badge](https://badges.greenkeeper.io/anishkny/realworld-firebase-gcp-cloud-functions.svg)](https://greenkeeper.io/)
 [![Gitter](https://img.shields.io/gitter/room/realworld-dev/firebase-gcp.svg)](https://gitter.im/realworld-dev/firebase-gcp)
 
 > ### Firebase + GCP Cloud Functions codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld](https://github.com/gothinkster/realworld-example-apps) spec and API.
