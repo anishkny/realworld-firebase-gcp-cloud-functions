@@ -7,7 +7,7 @@ var expect = require('chai').expect;
 var testUser = {
   email: casual.email.toLowerCase(),
   password: casual.password,
-  username: casual.username,
+  username: casual.username.replace(/[\.#$\[\]]/g, ''),
 };
 var loggedInUser = {};
 

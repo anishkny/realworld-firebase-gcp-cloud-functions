@@ -35,6 +35,11 @@ module.exports = {
       }
     }
 
+    // Add to authors reference
+    await admin.database().ref(`/authors/${aUser.user.username}/${articleSlug}`).set({
+      createdAt: timestamp,
+    });
+
     // Decorate return value with computed information
     newArticle.slug = articleSlug;
     newArticle.favorited = false;
@@ -84,6 +89,9 @@ module.exports = {
         await admin.database().ref(`/tags/${tag}/${aSlug}`).remove();
       }
     }
+    // Remove from authors reference
+    await admin.database().ref(`/authors/${article.article.author.username}/${article.article.slug}`).remove();
+
     await admin.database().ref(`/articles/${aSlug}`).remove();
   },
 
