@@ -106,6 +106,47 @@ module.exports = {
     };
   },
 
+  async getAllByTag(aTag, aLimit, aEndAt) {
+    if (!aTag) {
+      throw new Error('Tag must be specified');
+    }
+    if (!aLimit) {
+      aLimit = 20;
+    }
+    if (!aEndAt) {
+      aEndAt = 1e13; // November 20, 2286
+    }
+    var firebaseTaggedArticles = (await admin.database().ref(`/tags/${aTag}`)
+      .orderByChild('createdAt').limitToLast(aLimit + 1).endAt(aEndAt).once('value')).val();
+
+    if (!firebaseTaggedArticles) {
+      return { articles: [], articlesCount: 0, nextEndAt: 0, }
+    }
+
+    // Transform returned firebaseTaggedArticles to expected format (TODO)
+    var slugs = Object.keys(firebaseTaggedArticles).sort((a, b) => {
+      return (firebaseTaggedArticles[b].createdAt - firebaseTaggedArticles[a].createdAt);
+    });
+
+    var articles = [];
+    for (var i = 0; i < slugs.length; ++i) {
+      articles.push((await admin.database().ref(`/articles/${slugs[i]}`).once('value')).val());
+    }
+    var nextEndAt = 0;
+
+    // Delete extra retrieved article if any
+    if (articles.length && articles.length > aLimit) {
+      nextEndAt = articles[articles.length - 1].createdAt;
+      articles.splice(-1, 1);
+    }
+    return {
+      articles,
+      articlesCount: articles.length,
+      nextEndAt
+    };
+  },
+
+
   async delete(aSlug, aUser) {
     if (!aSlug) {
       throw new Error('Slug must be specified');
