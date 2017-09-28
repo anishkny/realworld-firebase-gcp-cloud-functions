@@ -85,6 +85,7 @@ describe('Article', () => {
     for (var i = 0; i < 3; ++i) {
       expect(retrievedArticles[i].title).to.equal(`title: ${10 - i}`);
     }
+    retrievedArticles = await Article.getAll(3, 2);
 
     // Get all created articles and verify
     retrievedArticles = await Article.getAll();
