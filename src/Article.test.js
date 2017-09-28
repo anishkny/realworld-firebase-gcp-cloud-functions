@@ -63,6 +63,41 @@ describe('Article', () => {
     });
   });
 
+  it('getAll', async() => {
+    // Create few articles with pauses in between
+    var createdArticles = [];
+    var promises = [];
+    process.stdout.write('      ');
+    for (var i = 1; i <= 10; ++i) {
+      await Promise.all([
+        Article.create({ title: `title: ${i}`, description: 'd', body: 'b' }, loggedInUser)
+        .then(_article => {
+          createdArticles.push(_article);
+        }),
+        timeout(200),
+      ]);
+      process.stdout.write('.');
+    }
+    console.log('');
+
+    // Get few newest articles and ensure they are newest first
+    var retrievedArticles = await Article.getAll(3);
+    for (var i = 0; i < 3; ++i) {
+      expect(retrievedArticles[i].title).to.equal(`title: ${10 - i}`);
+    }
+
+    // Get all created articles and verify
+    retrievedArticles = await Article.getAll();
+    for (var i = 0; i < 10; ++i) {
+      expect(retrievedArticles[i].title).to.equal(`title: ${10 - i}`);
+    }
+
+    // Cleanup
+    await Promise.all(createdArticles.map(_article => {
+      return Article.delete(_article.article.slug, loggedInUser);
+    }));
+  });
+
   it('delete', async() => {
     await Article.delete(null, loggedInUser).catch(e => {
       expect(e.message).to.match(/Slug must be specified/);
@@ -90,4 +125,8 @@ function createTestArticleData() {
     body: casual.text,
     tagList: casual.array_of_words(Math.ceil(10 * Math.random())),
   }
+}
+
+function timeout(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }

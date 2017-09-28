@@ -13,7 +13,7 @@ module.exports = {
     }
 
     var articleSlug = slug(aArticleData.title) + '-' + (Math.random() * Math.pow(36, 6) | 0).toString(36);
-    var timestamp = (new Date()).toISOString();
+    var timestamp = (new Date()).getTime();
     var newArticle = {
       title: aArticleData.title,
       description: aArticleData.description,
@@ -66,6 +66,27 @@ module.exports = {
     article.author.image = authorUser.user.image;
     article.author.following = false;
     return { article };
+  },
+
+  async getAll(aLimit, aOffset) {
+    if (!aLimit) {
+      aLimit = 20;
+    }
+    if (aOffset) {
+      // TODO: Implement offset functionality
+    }
+    var firebaseArticles = (await admin.database().ref('/articles')
+      .orderByChild('createdAt').limitToLast(aLimit).once('value')).val();
+
+    // Transform returned articles to expected format (TODO)
+    var slugs = Object.keys(firebaseArticles).sort((a, b) => {
+      return (firebaseArticles[b].createdAt - firebaseArticles[a].createdAt);
+    });
+    var articles = [];
+    slugs.forEach(slug => {
+      articles.push(firebaseArticles[slug]);
+    });
+    return articles;
   },
 
   async delete(aSlug, aUser) {

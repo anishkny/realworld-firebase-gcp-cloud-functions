@@ -1,7 +1,7 @@
 {
   "scripts": {
     "test": "npm run test:unit && npm run test:api",
-    "test:unit": "nyc --reporter=html --reporter=text --reporter=lcov mocha --timeout 10000 'src/**/*.test.js'",
+    "test:unit": "nyc --reporter=html --reporter=text --reporter=lcov mocha --timeout 60000 'src/**/*.test.js'",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "test:api": "./run-api-tests.sh"
   },
