@@ -32,7 +32,7 @@ module.exports = {
       res.status(200).send(await Article.create(req.body.article, validatedUser));
 
     } else if (req.path == '/articles' && req.method == 'GET') {
-      res.status(200).send(await Article.getAll(parseInt(req.query.limit), parseInt(req.query.endAt)));
+      res.status(200).send(await Article.getAll(parseInt(req.query.limit), parseInt(req.query.endAt), req.query.tag));
 
     } else if (req.path.startsWith('/articles/') && req.method == 'GET') {
       res.status(200).send(await Article.get(getSlug(req)));

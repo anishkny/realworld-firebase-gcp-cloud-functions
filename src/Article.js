@@ -37,6 +37,11 @@ module.exports = {
       }
     }
 
+    // Add to slugs reference
+    await admin.database().ref(`/slugs/${articleSlug}`).set({
+      createdAt: timestamp,
+    });
+
     // Add to authors reference
     await admin.database().ref(`/authors/${aUser.user.username}/${articleSlug}`).set({
       createdAt: timestamp,
@@ -70,64 +75,32 @@ module.exports = {
     return { article };
   },
 
-  async getAll(aLimit, aEndAt) {
+  async getAll(aLimit, aEndAt, aTag) {
     if (!aLimit) {
       aLimit = 20;
     }
     if (!aEndAt) {
       aEndAt = 1e13; // November 20, 2286
     }
-    var firebaseArticles = (await admin.database().ref('/articles')
-      .orderByChild('createdAt').limitToLast(aLimit + 1).endAt(aEndAt).once('value')).val();
+    var firebaseSlugs = null;
+    if (aTag) {
+      firebaseSlugs = (await admin.database().ref(`/tags/${aTag}`)
+        .orderByChild('createdAt').limitToLast(aLimit + 1).endAt(aEndAt).once('value')).val();
+    } else {
+      firebaseSlugs = (await admin.database().ref('/articles')
+        .orderByChild('createdAt').limitToLast(aLimit + 1).endAt(aEndAt).once('value')).val();
+    }
 
-    if (!firebaseArticles) {
+    if (!firebaseSlugs) {
       return { articles: [], articlesCount: 0, nextEndAt: 0, }
     }
 
-    // Transform returned articles to expected format (TODO)
-    var slugs = Object.keys(firebaseArticles).sort((a, b) => {
-      return (firebaseArticles[b].createdAt - firebaseArticles[a].createdAt);
-    });
-    var articles = [];
-    slugs.forEach(slug => {
-      articles.push(firebaseArticles[slug]);
-    });
-    var nextEndAt = 0;
-
-    // Delete extra retrieved article if any
-    if (articles.length && articles.length > aLimit) {
-      nextEndAt = articles[articles.length - 1].createdAt;
-      articles.splice(-1, 1);
-    }
-    return {
-      articles,
-      articlesCount: articles.length,
-      nextEndAt
-    };
-  },
-
-  async getAllByTag(aTag, aLimit, aEndAt) {
-    if (!aTag) {
-      throw new Error('Tag must be specified');
-    }
-    if (!aLimit) {
-      aLimit = 20;
-    }
-    if (!aEndAt) {
-      aEndAt = 1e13; // November 20, 2286
-    }
-    var firebaseTaggedArticles = (await admin.database().ref(`/tags/${aTag}`)
-      .orderByChild('createdAt').limitToLast(aLimit + 1).endAt(aEndAt).once('value')).val();
-
-    if (!firebaseTaggedArticles) {
-      return { articles: [], articlesCount: 0, nextEndAt: 0, }
-    }
-
-    // Transform returned firebaseTaggedArticles to expected format (TODO)
-    var slugs = Object.keys(firebaseTaggedArticles).sort((a, b) => {
-      return (firebaseTaggedArticles[b].createdAt - firebaseTaggedArticles[a].createdAt);
+    // Sort on createdAt descending
+    var slugs = Object.keys(firebaseSlugs).sort((a, b) => {
+      return (firebaseSlugs[b].createdAt - firebaseSlugs[a].createdAt);
     });
 
+    // Transform returned firebaseSlugs to expected format (TODO)
     var articles = [];
     for (var i = 0; i < slugs.length; ++i) {
       articles.push((await admin.database().ref(`/articles/${slugs[i]}`).once('value')).val());
@@ -145,7 +118,6 @@ module.exports = {
       nextEndAt
     };
   },
-
 
   async delete(aSlug, aUser) {
     if (!aSlug) {
@@ -168,6 +140,10 @@ module.exports = {
         await admin.database().ref(`/tags/${tag}/${aSlug}`).remove();
       }
     }
+
+    // Remove from slugs reference
+    await admin.database().ref(`/slugs/${aSlug}`).remove();
+
     // Remove from authors reference
     await admin.database().ref(`/authors/${article.article.author.username}/${article.article.slug}`).remove();
 

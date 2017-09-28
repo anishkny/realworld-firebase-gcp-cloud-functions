@@ -81,7 +81,7 @@ describe('Article', () => {
     await Article.delete(createdArticleNoTags.article.slug, loggedInUser);
   });
 
-  it('getAll, getAllByTag', async() => {
+  it('getAll', async() => {
     // Create few articles with pauses in between
     var createdArticles = [];
     var promises = [];
@@ -134,22 +134,22 @@ describe('Article', () => {
     }
 
     // Get all by tag
-    retrievedArticles = await Article.getAllByTag('sometag');
+    retrievedArticles = await Article.getAll(0, 0, 'sometag');
     expect(retrievedArticles.articles).to.have.lengthOf(10);
 
     // Get one by specific tag
-    retrievedArticles = await Article.getAllByTag('tag3');
+    retrievedArticles = await Article.getAll(0, 0, 'tag3');
     expect(retrievedArticles.articles).to.have.lengthOf(1);
 
     // Get few by tag
-    retrievedArticles = await Article.getAllByTag('sometag', 3, 1e13);
+    retrievedArticles = await Article.getAll(3, 1e13, 'sometag');
     expect(retrievedArticles.articles).to.have.lengthOf(3);
 
     // Get by unknown tag
-    retrievedArticles = await Article.getAllByTag('non-existent-tag');
+    retrievedArticles = await Article.getAll(0, 0, 'non-existent-tag');
     expect(retrievedArticles.articles).to.have.lengthOf(0);
 
-    await Article.getAllByTag().catch(e => {
+    await Article.getAll().catch(e => {
       expect(e.message).to.match(/Tag must be specified/);
     });
 
