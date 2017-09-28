@@ -78,6 +78,10 @@ module.exports = {
     var firebaseArticles = (await admin.database().ref('/articles')
       .orderByChild('createdAt').limitToLast(aLimit + 1).endAt(aEndAt).once('value')).val();
 
+    if (!firebaseArticles) {
+      return { articles: [], articlesCount: 0, nextEndAt: 0, }
+    }
+
     // Transform returned articles to expected format (TODO)
     var slugs = Object.keys(firebaseArticles).sort((a, b) => {
       return (firebaseArticles[b].createdAt - firebaseArticles[a].createdAt);
