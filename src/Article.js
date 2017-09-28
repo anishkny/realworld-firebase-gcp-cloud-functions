@@ -31,7 +31,9 @@ module.exports = {
     if (aArticleData.tagList) {
       for (var i = 0; i < aArticleData.tagList.length; ++i) {
         var tag = aArticleData.tagList[i];
-        await admin.database().ref(`/tags/${tag}/${articleSlug}`).set(true);
+        await admin.database().ref(`/tags/${tag}/${articleSlug}`).set({
+          createdAt: timestamp,
+        });
       }
     }
 
