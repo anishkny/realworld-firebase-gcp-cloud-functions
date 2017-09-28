@@ -1,6 +1,6 @@
 var Article = require('./Article.js');
 var User = require('./User.js');
-var { initializeApp, deleteApp } = require('./Firebase.js');
+var { initializeApp, deleteApp, ref } = require('./Firebase.js');
 var casual = require('casual');
 var expect = require('chai').expect;
 
@@ -32,6 +32,7 @@ before(async() => {
 after(async() => {
   // Delete test user and cleanup
   await User.delete(testUser.username);
+  await ref().remove();
   await deleteApp();
 });
 

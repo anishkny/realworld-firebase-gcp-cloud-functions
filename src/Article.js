@@ -1,4 +1,4 @@
-var { admin } = require('./Firebase.js');
+var { ref } = require('./Firebase.js');
 var User = require('./User.js');
 var slug = require('slug');
 
@@ -25,25 +25,25 @@ module.exports = {
         username: aUser.user.username,
       },
     };
-    await admin.database().ref(`/articles/${articleSlug}`).set(newArticle);
+    await ref(`/articles/${articleSlug}`).set(newArticle);
 
     // Update tags if any
     if (aArticleData.tagList) {
       for (var i = 0; i < aArticleData.tagList.length; ++i) {
         var tag = aArticleData.tagList[i];
-        await admin.database().ref(`/tags/${tag}/${articleSlug}`).set({
+        await ref(`/tags/${tag}/${articleSlug}`).set({
           createdAt: timestamp,
         });
       }
     }
 
     // Add to slugs reference
-    await admin.database().ref(`/slugs/${articleSlug}`).set({
+    await ref(`/slugs/${articleSlug}`).set({
       createdAt: timestamp,
     });
 
     // Add to authors reference
-    await admin.database().ref(`/authors/${aUser.user.username}/${articleSlug}`).set({
+    await ref(`/authors/${aUser.user.username}/${articleSlug}`).set({
       createdAt: timestamp,
     });
 
@@ -61,7 +61,7 @@ module.exports = {
   },
 
   async get(aSlug) {
-    var article = (await admin.database().ref(`/articles/${aSlug}`).once('value')).val();
+    var article = (await ref(`/articles/${aSlug}`).once('value')).val();
     if (!article) {
       throw new Error(`Article not found: ${aSlug}`);
     }
@@ -84,10 +84,10 @@ module.exports = {
     }
     var firebaseSlugs = null;
     if (aTag) {
-      firebaseSlugs = (await admin.database().ref(`/tags/${aTag}`)
+      firebaseSlugs = (await ref(`/tags/${aTag}`)
         .orderByChild('createdAt').limitToLast(aLimit + 1).endAt(aEndAt).once('value')).val();
     } else {
-      firebaseSlugs = (await admin.database().ref('/articles')
+      firebaseSlugs = (await ref('/articles')
         .orderByChild('createdAt').limitToLast(aLimit + 1).endAt(aEndAt).once('value')).val();
     }
 
@@ -103,7 +103,7 @@ module.exports = {
     // Transform returned firebaseSlugs to expected format (TODO)
     var articles = [];
     for (var i = 0; i < slugs.length; ++i) {
-      articles.push((await admin.database().ref(`/articles/${slugs[i]}`).once('value')).val());
+      articles.push((await ref(`/articles/${slugs[i]}`).once('value')).val());
     }
     var nextEndAt = 0;
 
@@ -137,17 +137,17 @@ module.exports = {
     if (article.article.tagList) {
       for (var i = 0; i < article.article.tagList.length; ++i) {
         var tag = article.article.tagList[i];
-        await admin.database().ref(`/tags/${tag}/${aSlug}`).remove();
+        await ref(`/tags/${tag}/${aSlug}`).remove();
       }
     }
 
     // Remove from slugs reference
-    await admin.database().ref(`/slugs/${aSlug}`).remove();
+    await ref(`/slugs/${aSlug}`).remove();
 
     // Remove from authors reference
-    await admin.database().ref(`/authors/${article.article.author.username}/${article.article.slug}`).remove();
+    await ref(`/authors/${article.article.author.username}/${article.article.slug}`).remove();
 
-    await admin.database().ref(`/articles/${aSlug}`).remove();
+    await ref(`/articles/${aSlug}`).remove();
   },
 
 };

@@ -22,6 +22,18 @@ module.exports = {
     }
   },
 
+  ref(aSubRef) {
+    if (!aSubRef) {
+      aSubRef = '';
+    }
+    if (aSubRef.charAt(0) == '/') {
+      aSubRef = aSubRef.substring(1);
+    }
+    /* istanbul ignore next */
+    var rootRef = process.env.FIREBASE_ROOT_REF ? process.env.FIREBASE_ROOT_REF : '/dev';
+    return admin.database().ref(`/${rootRef}/${aSubRef}`);
+  },
+
   async deleteApp() {
     if (firebase.apps.length) {
       await firebase.app().delete();
