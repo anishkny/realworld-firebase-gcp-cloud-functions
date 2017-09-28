@@ -9,7 +9,6 @@ general:
 test:
   post:
     - npm run coveralls
-    - bash <(curl -s https://codecov.io/bash)
 
 notify:
   webhooks:
