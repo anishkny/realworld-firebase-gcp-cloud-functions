@@ -68,15 +68,15 @@ module.exports = {
     return { article };
   },
 
-  async getAll(aLimit, aOffset) {
+  async getAll(aLimit, aEndAt) {
     if (!aLimit) {
       aLimit = 20;
     }
-    if (aOffset) {
-      // TODO: Implement offset functionality
+    if (!aEndAt) {
+      aEndAt = 1e13; // November 20, 2286
     }
     var firebaseArticles = (await admin.database().ref('/articles')
-      .orderByChild('createdAt').limitToLast(aLimit).once('value')).val();
+      .orderByChild('createdAt').limitToLast(aLimit + 1).endAt(aEndAt).once('value')).val();
 
     // Transform returned articles to expected format (TODO)
     var slugs = Object.keys(firebaseArticles).sort((a, b) => {
@@ -86,7 +86,18 @@ module.exports = {
     slugs.forEach(slug => {
       articles.push(firebaseArticles[slug]);
     });
-    return articles;
+    var nextEndAt = 0;
+
+    // Delete extra retrieved article if any
+    if (articles.length && articles.length > aLimit) {
+      nextEndAt = articles[articles.length - 1].createdAt;
+      articles.splice(-1, 1);
+    }
+    return {
+      articles,
+      articlesCount: articles.length,
+      nextEndAt
+    };
   },
 
   async delete(aSlug, aUser) {
