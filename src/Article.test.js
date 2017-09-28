@@ -137,6 +137,13 @@ describe('Article', () => {
     await Promise.all(createdArticles.map(_article => {
       return Article.delete(_article.article.slug, loggedInUser);
     }));
+
+    // Get articles when there are none
+    retrievedArticles = await Article.getAll();
+    expect(retrievedArticles.articles).to.be.an('array').that.is.empty;
+    expect(retrievedArticles.articlesCount).to.equal(0);
+    expect(retrievedArticles.nextEndAt).to.equal(0);
+
   });
 
 });
