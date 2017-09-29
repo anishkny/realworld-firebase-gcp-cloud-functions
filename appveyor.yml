@@ -1,5 +1,6 @@
 environment:
   nodejs_version: "8"
+  FIREBASE_ROOT_REF: appveyor
 
 install:
   - ps: Install-Product node $env:nodejs_version

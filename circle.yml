@@ -11,6 +11,8 @@ test:
   pre:
     - npm install -g greenkeeper-lockfile@1
     - greenkeeper-lockfile-update
+  override:
+    - FIREBASE_ROOT_REF=circleci-`date +%s` npm test
   post:
     - npm run coveralls
     - greenkeeper-lockfile-upload
