@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "test": "npm run test:unit && npm run test:api",
+    "test": "FIREBASE_ROOT_REF=testing-`date +%s` npm run test:unit && npm run test:api",
     "test:unit": "nyc --reporter=html --reporter=text --reporter=lcov mocha --reporter mochawesome --reporter-options reportDir=testresults,reportFilename=index.html --timeout 60000 'src/**/*.test.js'",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "test:api": "./run-api-tests.sh"
