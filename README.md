@@ -29,19 +29,59 @@ Authentication and Database are handled by [Firebase](https://firebase.google.co
 
 ## Setup Firebase
 
-* Setup a new Firebase project, [here](http://firebase.google.com)
-* Store Firebase service account JSON key as `./secrets/serviceAccountKey.json`  ([help](https://firebase.google.com/docs/admin/setup))
-* Store Firebase client keys config for Node.js as `./secrets/clientKey.json` ([help](https://firebase.google.com/docs/web/setup)) - Note: Make sure this is valid JSON.
-* Store the Firebase database URL endpoint as environment variable `FIREBASE_DATABASE_URL`
-* Execute the following code to populate an `.env` file in the project root folder
+Clone this repo.
+
+Setup a new Firebase project, [here](http://firebase.google.com). Note the Firebase Database URL and replace all instances of `TODO-REPLACE-THIS` in the following steps with your newly created database URL/name.
+
+Create a new service account and store the JSON key locally as `./secrets/serviceAccountKey.json` ([help](https://firebase.google.com/docs/admin/setup)). For example:
+
+```json
+{
+  "type": "service_account",
+  "project_id": "TODO-REPLACE-THIS",
+  "private_key_id": "...",
+  "private_key": "-----BEGIN PRIVATE KEY-----\n ... \n-----END PRIVATE KEY-----\n",
+  "client_email": "...@TODO-REPLACE-THIS.iam.gserviceaccount.com",
+  "client_id": "...",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/..."
+}
+```
+
+Store Firebase client keys config for Node.js as `./secrets/clientKey.json` ([help](https://firebase.google.com/docs/web/setup)) - Note: Make sure this is valid JSON. For example:
+
+```json
+{
+  "apiKey": "...",
+  "authDomain": "TODO-REPLACE-THIS.firebaseapp.com",
+  "databaseURL": "https://TODO-REPLACE-THIS.firebaseio.com",
+  "projectId": "TODO-REPLACE-THIS",
+  "storageBucket": "TODO-REPLACE-THIS.appspot.com",
+  "messagingSenderId": "..."
+}
+```
+
+Execute the following code to populate an `.env` file in the project root folder:
+
 ```bash
-rm -f .env
-touch .env
+rm -f .env && touch .env
 
 echo FIREBASE_SERVER_KEY=`cat ./secrets/serviceAccountKey.json | base64` | tee -a .env
 echo FIREBASE_CLIENT_KEY=`cat ./secrets/clientKey.json | base64` | tee -a .env
-echo FIREBASE_DATABASE_URL=$FIREBASE_DATABASE_URL | tee -a .env
+echo FIREBASE_DATABASE_URL=https://TODO-REPLACE-THIS.firebaseio.com | tee -a .env
 ```
+
+When you are done, your `.env` file should look something like this
+
+```
+FIREBASE_SERVER_KEY=3M3A0NWpFcFZ ... Y29tIgp9Cg==
+FIREBASE_CLIENT_KEY=ewogICJh7HJy ... MzU3NzAiCn0=
+FIREBASE_DATABASE_URL=https://TODO-REPLACE-THIS.firebaseio.com
+```
+
+That's it!
 
 ## Test locally
 ```bash
