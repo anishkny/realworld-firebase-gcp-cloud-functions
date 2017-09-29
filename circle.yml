@@ -5,6 +5,7 @@ machine:
 general:
   artifacts:
     - "coverage"
+    - "testresults"
 
 test:
   pre:

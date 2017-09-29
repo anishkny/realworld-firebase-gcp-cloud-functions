@@ -3,3 +3,4 @@ secrets/
 .env
 .nyc_output/
 coverage/
+testresults/
