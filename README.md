@@ -35,7 +35,10 @@ Authentication and Database are handled by [Firebase](https://firebase.google.co
 * Store the Firebase database URL endpoint as environment variable `FIREBASE_DATABASE_URL`
 * Execute the following code to populate an `.env` file in the project root folder
 ```bash
-echo FIREBASE_SERVER_KEY=`cat ./secrets/serviceAccountKey.json | base64` | tee .env
+rm -f .env
+touch .env
+
+echo FIREBASE_SERVER_KEY=`cat ./secrets/serviceAccountKey.json | base64` | tee -a .env
 echo FIREBASE_CLIENT_KEY=`cat ./secrets/clientKey.json | base64` | tee -a .env
 echo FIREBASE_DATABASE_URL=$FIREBASE_DATABASE_URL | tee -a .env
 ```
