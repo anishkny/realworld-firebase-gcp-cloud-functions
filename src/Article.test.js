@@ -11,7 +11,7 @@ var testUser = {
 };
 var loggedInUser = {};
 
-var testArticle = createTestArticleData('aricle with tags', true);
+var testArticle = createTestArticleData('article with tags', true);
 var testArticleNoTags = createTestArticleData('article without tags', false);
 delete testArticleNoTags.tagList
 
