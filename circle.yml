@@ -7,8 +7,12 @@ general:
     - "coverage"
 
 test:
+  pre:
+    - npm install -g greenkeeper-lockfile@1
+    - greenkeeper-lockfile-update
   post:
     - npm run coveralls
+    - greenkeeper-lockfile-upload
 
 notify:
   webhooks:
