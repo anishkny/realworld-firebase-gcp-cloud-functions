@@ -75,21 +75,22 @@ module.exports = {
     return { article };
   },
 
-  async getAll(aLimit, aEndAt, aTag) {
+  async getAll(aLimit, aEndAt, aTag, aAuthor) {
     if (!aLimit) {
       aLimit = 20;
     }
     if (!aEndAt) {
       aEndAt = 1e13; // November 20, 2286
     }
-    var firebaseSlugs = null;
+    var articlesRef = ref('/articles');
     if (aTag) {
-      firebaseSlugs = (await ref(`/tags/${aTag}`)
-        .orderByChild('createdAt').limitToLast(aLimit + 1).endAt(aEndAt).once('value')).val();
-    } else {
-      firebaseSlugs = (await ref('/articles')
-        .orderByChild('createdAt').limitToLast(aLimit + 1).endAt(aEndAt).once('value')).val();
+      articlesRef = ref(`/tags/${aTag}`);
+    } else if (aAuthor) {
+      articlesRef = ref(`/authors/${aAuthor}`);
     }
+    var firebaseSlugs = null;
+    firebaseSlugs = (await articlesRef.orderByChild('createdAt')
+      .limitToLast(aLimit + 1).endAt(aEndAt).once('value')).val();
 
     if (!firebaseSlugs) {
       return { articles: [], articlesCount: 0, nextEndAt: 0, }

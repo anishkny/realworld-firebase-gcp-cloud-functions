@@ -466,6 +466,55 @@
           "response": []
         },
         {
+          "name": "Get All Articles By Author",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "tests[\"Status code is 200\"] = responseCode.code === 200;",
+                "",
+                "var responseJSON = JSON.parse(responseBody);",
+                "tests['Response has \"articles\" property'] = responseJSON.hasOwnProperty('articles');",
+                "tests['\"articles\" is an array'] = Array.isArray(responseJSON.articles);",
+                "tests['Response has \"articlesCount\" property'] = responseJSON.hasOwnProperty('articlesCount');",
+                "tests['Response has \"nextEndAt\" property'] = responseJSON.hasOwnProperty('nextEndAt');",
+                ""
+              ]
+            }
+          }],
+          "request": {
+            "url": {
+              "raw": "{{apiUrl}}/articles?author=a_at_b",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "articles"
+              ],
+              "query": [{
+                "key": "author",
+                "value": "a_at_b",
+                "equals": true,
+                "description": ""
+              }],
+              "variable": []
+            },
+            "method": "GET",
+            "header": [{
+              "key": "Content-Type",
+              "value": "application/json",
+              "description": ""
+            }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"article\": {\n    \"title\": \"How to train your dragon\",\n    \"description\": \"Ever wonder how?\",\n    \"body\": \"You have to believe\",\n    \"tagList\": [\"reactjs\", \"angularjs\", \"dragons\"]\n  }\n}"
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
           "name": "Delete Article",
           "event": [{
             "listen": "test",

@@ -150,10 +150,9 @@ describe('Article', () => {
     retrievedArticles = await Article.getAll(0, 0, 'non-existent-tag');
     expect(retrievedArticles.articles).to.have.lengthOf(0);
 
-    await Article.getAll().catch(e => {
-      expect(e.message).to.match(/Tag must be specified/);
-    });
-
+    // Get by author
+    retrievedArticles = await Article.getAll(0, 0, null, testUser.username);
+    expect(retrievedArticles.articles).to.have.lengthOf(10);
 
     // Cleanup
     await Promise.all(createdArticles.map(_article => {
