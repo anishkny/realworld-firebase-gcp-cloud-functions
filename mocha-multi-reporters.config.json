@@ -1,0 +1,10 @@
+{
+  "reporterEnabled": "mochawesome,mocha-junit-reporter",
+  "mochaJunitReporterReporterOptions": {
+    "mochaFile": "testresults/junit.xml"
+  },
+  "mochawesomeReporterOptions": {
+    "reportDir": "testresults",
+    "reportFilename": "index.html"
+  }
+}

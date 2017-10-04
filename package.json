@@ -1,7 +1,7 @@
 {
   "scripts": {
     "test": "FIREBASE_ROOT_REF=testing-`date +%s` npm run test:unit && npm run test:api",
-    "test:unit": "nyc --reporter=html --reporter=text --reporter=lcov mocha --reporter mochawesome --reporter-options reportDir=testresults,reportFilename=index.html --timeout 60000 'src/**/*.test.js'",
+    "test:unit": "nyc --reporter=html --reporter=text --reporter=lcov mocha --reporter mocha-multi-reporters --reporter-options configFile=mocha-multi-reporters.config.json --timeout 60000 'src/**/*.test.js'",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "test:api": "./run-api-tests.sh"
   },
@@ -19,6 +19,8 @@
     "coveralls": "^3.0.0",
     "jsdoc": "^3.5.5",
     "mocha": "^4.0.0",
+    "mocha-junit-reporter": "^1.15.0",
+    "mocha-multi-reporters": "^1.1.6",
     "mochawesome": "^2.3.1",
     "newman": "^3.8.2",
     "nyc": "^11.2.1"
