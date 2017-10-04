@@ -14,7 +14,8 @@ test:
   post:
     - npm run coveralls
     - greenkeeper-lockfile-upload
-    - cp testresults/junit.xml $CIRCLE_TEST_REPORTS
+    - mkdir $CIRCLE_TEST_REPORTS/junit
+    - cp testresults/junit.xml $CIRCLE_TEST_REPORTS/junit/test-results.xml
 
 notify:
   webhooks:
