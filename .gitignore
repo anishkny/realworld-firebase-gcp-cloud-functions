@@ -4,3 +4,4 @@ secrets/
 .nyc_output/
 coverage/
 testresults/
+package-lock.json

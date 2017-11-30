@@ -8,12 +8,8 @@ general:
     - "testresults"
 
 test:
-  pre:
-    - npm install -g greenkeeper-lockfile@1
-    - greenkeeper-lockfile-update
   post:
     - npm run coveralls
-    - greenkeeper-lockfile-upload
     - mkdir $CIRCLE_TEST_REPORTS/junit
     - cp testresults/junit.xml $CIRCLE_TEST_REPORTS/junit/test-results.xml
 
